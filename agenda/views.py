@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, make_response, jsonify
 from api import Consultas
 
 bp = Blueprint('views', __name__)
@@ -8,9 +8,8 @@ bp = Blueprint('views', __name__)
 def homepage():
     return "Hello, World!"
 
-@app.route('/consultas', methods=['GET'])
+@bp.route('/consultas', methods=['GET'])
 def get_consultas():
     return make_response(
-       jsonify(Consultas) 
+       jsonify(Consultas),200
     )
-app.run()
