@@ -1,9 +1,15 @@
 from flask import Flask
-
-app = Flask(__name__)
-
-# Adicione o ponto (.) antes de views:
+import db
 from views import bp
+
+app = Flask(__name__, instance_relative_config=True)
+
+app.config.from_mapping(
+    SECRET_KEY='secret',
+    DATABASE=app.instance_path + '/agenda.sqlite',
+)
+db.init_app(app)
+
 app.register_blueprint(bp)
 
 if __name__ == "__main__":
