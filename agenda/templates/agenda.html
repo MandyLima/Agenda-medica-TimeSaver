@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Agenda Médica</title>
+    <link href="https://unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js"></script>
+</head>
+<body>
+    <h2>Agenda Médica</h2>
+    <a href="{{ url_for('views.logout') }}">Sair</a>
+    {% if erro %}
+        <p style="color: red;">{{ erro }}</p>
+    {% endif %}
+
+    <input type="text" id="busca" placeholder="Buscar por paciente, CPF ou médico..." style="margin-bottom: 10px; padding: 6px; width: 300px;">
+
+    <div id="tabela-agenda"></div>
+
+    <script>
+        const dados = {{ consultas | tojson }};
+
+        const table = new Tabulator("#tabela-agenda", {
+            data: dados,
+            layout: "fitColumns",
+            placeholder: "Nenhum agendamento disponível.",
+            columns: [
+                { title: "Data", field: "data_consulta" },
+                { title: "Horário", field: "hora_consulta" },
+                { title: "Paciente", field: "nome_paciente" },
+                { title: "CPF", field: "cpf_paciente" },
+                { title: "Médico", field: "nome_medico" },
+                { title: "Especialidade", field: "especialidade_medico" },
+                { title: "Convênio", field: "convenio" },
+                { title: "Status", field: "status" },
+            ],
+        });
+
+        document.getElementById("busca").addEventListener("input", function (e) {
+            const valor = e.target.value;
+            if (!valor) {
+                table.clearFilter();
+                return;
+            }
+            table.setFilter([
+                [
+                    { field: "nm_paciente", type: "like", value: valor },
+                    { field: "cpf_paciente", type: "like", value: valor },
+                    { field: "nm_medico", type: "like", value: valor },
+                ]
+            ], "or");
+        });
+    </script>
+</body>
+</html>
