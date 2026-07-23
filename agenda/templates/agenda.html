@@ -2,20 +2,44 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Agenda Médica</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Médica - TimeSaver</title>
+
     <link href="https://unpkg.com/tabulator-tables@6.2.1/dist/css/tabulator.min.css" rel="stylesheet">
     <script src="https://unpkg.com/tabulator-tables@6.2.1/dist/js/tabulator.min.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <h2>Agenda Médica</h2>
-    <a href="{{ url_for('views.logout') }}">Sair</a>
-    {% if erro %}
-        <p style="color: red;">{{ erro }}</p>
-    {% endif %}
+<body class="agenda-body">
 
-    <input type="text" id="busca" placeholder="Buscar por paciente, CPF ou médico..." style="margin-bottom: 10px; padding: 6px; width: 300px;">
+    <nav class="navbar">
+        <h1>Agenda Médica</h1>
+        <a href="{{ url_for('views.logout') }}" class="btn-logout">Sair</a>
+    </nav>
 
-    <div id="tabela-agenda"></div>
+    <div class="container">
+        <h2>Bem-vindo, {{ usuario }}!</h2>
+        {% if erro %}
+            <div class="alert-error" style="margin-bottom: 20px;">
+                {{ erro }}
+            </div>
+        {% endif %}
+
+        <div class="card">
+            <h3>Consultar Agendamentos</h3>
+            <p style="color: #6c757d; font-size: 0.9rem; margin-top: 5px; margin-bottom: 15px;">
+                Digite o nome do paciente, CPF ou nome do médico para filtrar a lista.
+            </p>
+            <div class="search-box">
+                <input type="text" id="busca" placeholder="Buscar por paciente, CPF ou médico...">
+            </div>
+        </div>
+
+        <div class="card">
+            <div id="tabela-agenda"></div>
+        </div>
+
+    </div>
 
     <script>
         const dados = {{ consultas | tojson }};
@@ -25,14 +49,14 @@
             layout: "fitColumns",
             placeholder: "Nenhum agendamento disponível.",
             columns: [
-                { title: "Data", field: "data_consulta" },
-                { title: "Horário", field: "hora_consulta" },
+                { title: "Data", field: "data_consulta", width: 110 },
+                { title: "Horário", field: "hora_consulta", width: 100 },
                 { title: "Paciente", field: "nome_paciente" },
-                { title: "CPF", field: "cpf_paciente" },
+                { title: "CPF", field: "cpf_paciente", width: 140 },
                 { title: "Médico", field: "nome_medico" },
                 { title: "Especialidade", field: "especialidade_medico" },
                 { title: "Convênio", field: "convenio" },
-                { title: "Status", field: "status" },
+                { title: "Status", field: "status", width: 120 },
             ],
         });
 
@@ -42,13 +66,14 @@
                 table.clearFilter();
                 return;
             }
+            
             table.setFilter([
                 [
-                    { field: "nm_paciente", type: "like", value: valor },
+                    { field: "nome_paciente", type: "like", value: valor },
                     { field: "cpf_paciente", type: "like", value: valor },
-                    { field: "nm_medico", type: "like", value: valor },
+                    { field: "nome_medico", type: "like", value: valor },
                 ]
-            ], "or");
+            ]);
         });
     </script>
 </body>

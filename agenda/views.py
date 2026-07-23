@@ -37,7 +37,7 @@ def validar_consultas(dados):
 def agenda():
     if 'user_id' not in session:
         return redirect(url_for('views.login'))
-
+    username = session.get('username', 'Usuário')
     try:
         url = url_for('views.get_consultas', _external=True)
         resposta = requests.get(url, timeout=5)
@@ -46,16 +46,16 @@ def agenda():
         dados = validar_consultas(dados)
         
         if not dados:
-            return render_template('agenda.html', consultas=[], erro="Nenhum agendamento encontrado.")
+            return render_template('agenda.html', consultas=[], erro="Nenhum agendamento encontrado.", usuario=username)
 
-        return render_template('agenda.html', consultas=dados, erro=None)
+        return render_template('agenda.html', consultas=dados, erro=None, usuario=username)
     
     except requests.exceptions.ConnectionError:
-        return render_template('agenda.html', consultas=[], erro="Não foi possível conectar à API de agendamentos.")
+        return render_template('agenda.html', consultas=[], erro="Não foi possível conectar à API de agendamentos.", usuario=username)
     except requests.exceptions.Timeout:
-        return render_template('agenda.html', consultas=[], erro="A API demorou demais para responder.")
+        return render_template('agenda.html', consultas=[], erro="A API demorou demais para responder.", usuario=username)
     except requests.exceptions.RequestException as e:
-        return render_template('agenda.html', consultas=[], erro=f"Erro ao buscar agendamentos: {e}")
+        return render_template('agenda.html', consultas=[], erro=f"Erro ao buscar agendamentos: {e}", usuario=username)
     
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
