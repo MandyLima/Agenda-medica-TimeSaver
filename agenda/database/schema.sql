@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS "usuario" (
     "id"        INTEGER NOT NULL,
     "nm_usuario"     TEXT NOT NULL UNIQUE,
-    "senha_hash" TEXT NOT NULL,
+    "senha_hash"  TEXT NOT NULL,
     PRIMARY KEY("id" AUTOINCREMENT)
 );
 
