@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    container_name: agenda_medica
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      - ./agenda/instance:/agenda/instance
+    restart: always

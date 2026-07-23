@@ -2,12 +2,19 @@ import sqlite3
 from datetime import datetime
 import click
 from flask import current_app, g
+import os
 
 
 def get_db():
     if 'db' not in g:
+        db_path = current_app.config.get('DATABASE', 'instance/agenda.db')
+        
+        pasta = os.path.dirname(db_path)
+        if pasta:
+            os.makedirs(pasta, exist_ok=True)
+
         g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
+            db_path,
             detect_types=sqlite3.PARSE_DECLTYPES
         )
         g.db.row_factory = sqlite3.Row
