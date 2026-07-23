@@ -75,7 +75,7 @@ def login():
         return render_template('login.html', erro="Erro ao acessar o sistema. Tente novamente mais tarde."), 500
 
     if usuario is None or not check_password_hash(usuario['senha_hash'], password):            
-        return "Usuário ou senha incorretos", 401
+        return render_template('login.html', erro="Usuário ou senha incorretos"), 401
 
     session['user_id'] = usuario['id']
     session['username'] = usuario['nm_usuario']
